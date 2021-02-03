@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 const ENV = {
     dev: {
-      apiUrl: "https://d3-team-project-31-appetite.herokuapp.com/",
+      apiUrl: "http://localhost:5000/",
     },
     prod: {
       apiUrl: "https://d3-team-project-31-appetite.herokuapp.com/",

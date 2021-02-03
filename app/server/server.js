@@ -4,9 +4,7 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-
 const dotenv = require("dotenv");
-
 // get config vars
 dotenv.config();
 

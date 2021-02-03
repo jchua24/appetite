@@ -6,7 +6,7 @@ import env from "../env";
 
 export const apiLogin = async (email: string, password: string) => {
   try {
-    const user = await axios.post(env.apiUrl + 'user/auth', {
+    const user = await axios.post(env.apiUrl + 'auth/', {
       email,
       password,
     });

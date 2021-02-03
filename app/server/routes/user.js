@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 
     User.find().then(
         user => {
-            res.send({ user }); // can wrap in object if want to add more properties
+            res.send({ user }); 
         },
         error => {
             res.status(500).send(error); // server error

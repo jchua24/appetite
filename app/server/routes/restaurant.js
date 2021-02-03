@@ -14,7 +14,7 @@ mongoose.set('useFindAndModify', false); // for some deprecation issues
 router.get("/", async (req, res) => {
     Restaurant.find().then(
         restaurant => {
-            res.send({ restaurant }); // can wrap in object if want to add more properties
+            res.send({ restaurant }); 
         },
         error => {
             res.status(500).send(error); // server error

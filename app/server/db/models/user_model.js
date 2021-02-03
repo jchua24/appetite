@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
         type: Number,
         required: false
     },
-    password: {
+    longitude: {
         type: Number,
         required: false
     },
