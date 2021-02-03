@@ -2,8 +2,13 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-
 const port = process.env.PORT || 5000;
+
+
+const dotenv = require("dotenv");
+
+// get config vars
+dotenv.config();
 
 //allows for the parsing of request bodies 
 app.use(express.json({limit: '50mb'}))

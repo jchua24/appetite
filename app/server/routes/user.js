@@ -1,10 +1,25 @@
 const express = require('express');
 const router = express.Router() 
 
+// import the user model
+const { User } = require("../db/models/user_model");
+
+// mongoose and mongo connection
+const { mongoose } = require("../db/mongoose");
+mongoose.set('useFindAndModify', false); // for some deprecation issues
 
 // get individual user data 
 router.get("/", async (req, res) => {
-    res.send("getting individual user data!"); 
+
+    User.find().then(
+        user => {
+            res.send({ user }); // can wrap in object if want to add more properties
+        },
+        error => {
+            res.status(500).send(error); // server error
+        }
+    );
+
 });
 
 //get superlikes of user 

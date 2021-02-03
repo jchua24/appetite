@@ -27,7 +27,7 @@ export const apiSignup = async (email: string, password: string, name: string) =
   console.log("attempting to sign up w/ email: " + email + " , password: " + password + " , name: " + name)
 
     try {
-      const user = await axios.post(env.apiUrl  + 'user/add', {
+      const user = await axios.post(env.apiUrl  + 'auth/add', {
         email,
         password,
         name
