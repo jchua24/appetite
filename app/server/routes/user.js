@@ -3,34 +3,73 @@ const router = express.Router()
 
 // import the user model
 const { User } = require("../db/models/user_model");
+const { Restaurant } = require("../db/models/restaurant_model");
 
 // mongoose and mongo connection
 const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
-// get individual user data 
-router.get("/", async (req, res) => {
+const {authenticateToken} = require('../auth/auth_helpers');
 
-    User.find().then(
-        user => {
-            res.send({ user }); 
-        },
-        error => {
-            res.status(500).send(error); // server error
-        }
-    );
+// get individual user data 
+router.get("/:id", authenticateToken, async (req, res) => {
+
+    const user = await User.findOne({ _id: req.params.id }).exec();
+
+    if(user != null) {
+        return res.send(user); 
+    } else {
+        return res.sendStatus(404); //user not found
+    }
 
 });
 
-//get superlikes of user 
-router.get("/superlikes", async (req, res) => {
-    res.send("getting all superlikes for user"); 
+//return restaurant info on all restaurants in the specified user's superlikes history
+router.get("/superlike/:id", async (req, res) => {
+
+    //search collections for user and restaurant
+    const user = await User.findOne({ _id: req.params.id }).exec();
+  
+    if(user == null) {
+        return res.sendStatus(404);
+    } 
+    
+    //search restaurant collection with IDs
+    const restaurants = await Restaurant.find().where('_id').in(user.superLikes).exec();
+
+    if (restaurants != null) {
+        return res.send(restaurants); 
+    } else {
+        return res.send([]); 
+    }
+
 });
 
 
 // add super like for specific user 
-router.get("/superlike", async (req, res) => {
-    res.send("testing server!"); 
+router.post("/superlike/:id", async (req, res) => {
+
+    //search collections for user and restaurant
+    const user = await User.findOne({ _id: req.params.id }).exec();
+    const restaurant = await Restaurant.findOne({_id: req.params.id}).exec(); 
+
+    if(user == null || restaurant == null) {
+        return res.sendStatus(404); //user and/or restaurant not found
+    } 
+    
+    try { 
+        const res = await User.updateOne({_id: user._id},  { $push: { superLikes: restaurant._id }});
+        
+        if(res) {
+            return res.sendStatus(200); 
+        } else {
+            return res.sendStatus(400); //unable to insert superlike, bad request
+        }
+    
+    } catch(err) {
+        return res.send(400) 
+    }
+
 });
 
 

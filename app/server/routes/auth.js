@@ -14,6 +14,7 @@ const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
 const {hashPassword, verifyPassword, generateAccessToken} = require("../auth/auth_helpers"); 
+const {categories} = require('../misc/categories');
 
 
 
@@ -71,7 +72,7 @@ router.post("/add", async (req, res) => {
         try {
 
             const hash = hashPassword(req.body.password); 
-            const newUser = new User({name: req.body.name, email: email, password: hash});
+            const newUser = new User({name: req.body.name, email: email, password: hash, categories: categories});
 
             //persist user and generate access token
             const userAdded = await newUser.save();
