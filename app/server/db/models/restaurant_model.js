@@ -8,32 +8,56 @@ mongoose.pluralize(null);
 
 // create a restaurant schema
 const restaurantSchema = mongoose.Schema({
+    yelpid: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
-    email: {
-        type: String,
+    rating: {
+        type: Number,
         required: true
     },
-    password: {
-        type: String,
-        required: true
-    },
-    latitude: {
+    numratings: {
         type: Number,
         required: false
     },
-    password: {
-        type: Number,
-        required: false
+    imageURL: {
+        type: Array,
+        required: true
     },
-    superlikes: {
-        type: Array, 
+    lat: {
+        type: Number, 
         required: false
     }, 
+    long: {
+        type: Number, 
+        required: false
+    }, 
+    address: {
+        type: String, 
+        required: true
+    },
     categories: {
+        type: Array, 
+        required: true
+    },
+    price: {
+        type: Number, 
+        required: true
+    },
+    weight: {
+        type: Number, 
+        required: true
+    },
+    topreview: {
         type: Object, 
+        required: false
+    },
+    hours: {
+        type: Object,
         required: false
     }
 });

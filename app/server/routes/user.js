@@ -9,7 +9,7 @@ const { Restaurant } = require("../db/models/restaurant_model");
 const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
-const {authenticateToken} = require('../auth/auth_helpers');
+const {authenticateToken} = require('../service/auth/auth_helpers');
 
 // get individual user data 
 router.get("/:id", authenticateToken, async (req, res) => {
@@ -25,7 +25,7 @@ router.get("/:id", authenticateToken, async (req, res) => {
 });
 
 //return restaurant info on all restaurants in the specified user's superlikes history
-router.get("/superlike/:id", async (req, res) => {
+router.get("/superlike/:id", authenticateToken, async (req, res) => {
 
     //search collections for user and restaurant
     const user = await User.findOne({ _id: req.params.id }).exec();
@@ -47,7 +47,7 @@ router.get("/superlike/:id", async (req, res) => {
 
 
 // add super like for specific user 
-router.post("/superlike/:id", async (req, res) => {
+router.post("/superlike/:id", authenticateToken, async (req, res) => {
 
     //search collections for user and restaurant
     const user = await User.findOne({ _id: req.params.id }).exec();
@@ -71,7 +71,6 @@ router.post("/superlike/:id", async (req, res) => {
     }
 
 });
-
 
 
 module.exports = router; 
