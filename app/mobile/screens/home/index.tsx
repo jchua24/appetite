@@ -29,7 +29,7 @@ const Home = ({route, navigation}) => {
 
         if(route.params.login == true) {
           fetchUserDetails(); 
-          // fetchSuperLikes();  
+          fetchSuperLikes();  
         } 
 
     }, [navigation]);
@@ -37,7 +37,7 @@ const Home = ({route, navigation}) => {
     React.useEffect(() => {
 
       setLoading(true);
-      // fetchRestaurants(cuisinePreferences, searchRadius, pricePreference);
+      fetchRestaurants(cuisinePreferences, searchRadius, pricePreference);
 
     }, [cuisinePreferences, searchRadius, pricePreference]);
 

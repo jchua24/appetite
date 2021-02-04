@@ -8,7 +8,7 @@ const client = axios.create();
 client.interceptors.response.use(
   res => res,
   err => {
-    if (err.response && err.response.status === 400) {
+    if (err.response && err.response.status === 401) {
         AsyncStorage.removeItem("authToken")
         throw new Error("auth invalid")
     } else {

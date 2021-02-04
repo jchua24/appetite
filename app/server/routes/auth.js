@@ -98,14 +98,4 @@ router.post("/add", async (req, res) => {
 });
 
 
-//endpoint to test password hashing
-router.get("/test", async (req, res) => {
-
-    const testString = "test";
-    const hash = await hashPassword(testString); 
-    res.send(hash); 
-});
-
-
-
 module.exports = router; 

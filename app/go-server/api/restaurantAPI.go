@@ -187,65 +187,6 @@ func (data *DB) GetRestaurant(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (data *DB) AddRestaurant(w http.ResponseWriter, r *http.Request) {
-	err := auth.ValidateToken(w, r)
-	if err != nil {
-		return
-	}
-
-	var restaurant models.Restaurant
-	postBody, _ := ioutil.ReadAll(r.Body)
-	err = json.Unmarshal(postBody, &restaurant)
-	if err != nil {
-		log.Print("Error unpacking restaurant data")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
-	restaurant.ID = primitive.NewObjectID()
-	_, err = data.db.Collection("restaurant").InsertOne(data.ctx, restaurant)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		response, _ := json.Marshal(restaurant)
-		w.Write(response)
-	}
-}
-
-func (data *DB) UpdateRestaurant(w http.ResponseWriter, r *http.Request) {
-	err := auth.ValidateToken(w, r)
-	if err != nil {
-		return
-	}
-
-	objectID, err := getId(w, r)
-	if err != nil {
-		return
-	}
-
-	var restaurant models.Restaurant
-	postBody, _ := ioutil.ReadAll(r.Body)
-	err = json.Unmarshal(postBody, &restaurant)
-	if err != nil {
-		log.Print("Error unpacking restaurant data")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
-	restaurant.ID = objectID
-	_, err = data.db.Collection("restaurant").ReplaceOne(data.ctx, bson.M{"_id": objectID}, restaurant)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-	} else {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
-		response, _ := json.Marshal(restaurant)
-		w.Write(response)
-	}
-}
 
 func (data *DB) Swipe(w http.ResponseWriter, r *http.Request) {
 	err := auth.ValidateToken(w, r)
@@ -311,25 +252,6 @@ func (data *DB) Swipe(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (data *DB) DeleteRestaurant(w http.ResponseWriter, r *http.Request) {
-	err := auth.ValidateToken(w, r)
-	if err != nil {
-		return
-	}
-
-	objectID, err := getId(w, r)
-	if err != nil {
-		return
-	}
-
-	_, err = data.db.Collection("restaurant").DeleteOne(data.ctx, (bson.M{"_id": objectID}))
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-	} else {
-		w.WriteHeader(http.StatusOK)
-	}
-}
 
 func getRadius(filter models.Filter) models.Radius {
 	var radius models.Radius

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 //prevent mongoose from automatically pluralizing collection name
 mongoose.pluralize(null);
 
+
 // create a restaurant schema
 const restaurantSchema = mongoose.Schema({
     yelpid: {
@@ -61,6 +62,11 @@ const restaurantSchema = mongoose.Schema({
         required: false
     }
 });
+
+restaurantSchema.set('toJSON', {
+    virtuals: true
+});
+
 
 // create an restaurant model using the schema
 const Restaurant = mongoose.model('restaurant', restaurantSchema);

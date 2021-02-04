@@ -38,6 +38,10 @@ const userSchema = mongoose.Schema({
     }
 });
 
+userSchema.set('toJSON', {
+    virtuals: true
+});
+
 // create an user model using the schema
 const User = mongoose.model('user', userSchema);
 

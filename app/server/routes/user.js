@@ -46,28 +46,24 @@ router.get("/superlike/:id", authenticateToken, async (req, res) => {
 });
 
 
-// add super like for specific user 
+// add super like for specific user (restaurantId provided in body)
 router.post("/superlike/:id", authenticateToken, async (req, res) => {
 
     //search collections for user and restaurant
     const user = await User.findOne({ _id: req.params.id }).exec();
-    const restaurant = await Restaurant.findOne({_id: req.params.id}).exec(); 
+    const restaurant = await Restaurant.findOne({_id: req.body.restaurantId}).exec(); 
 
     if(user == null || restaurant == null) {
         return res.sendStatus(404); //user and/or restaurant not found
     } 
     
     try { 
-        const res = await User.updateOne({_id: user._id},  { $push: { superLikes: restaurant._id }});
-        
-        if(res) {
-            return res.sendStatus(200); 
-        } else {
-            return res.sendStatus(400); //unable to insert superlike, bad request
-        }
-    
+        //add restaurant to user's list superlike history
+        await User.updateOne({_id: user._id},  { $push: { superLikes: restaurant._id }});
+        return res.sendStatus(200); 
     } catch(err) {
-        return res.send(400) 
+        console.log(err);
+        return res.sendStatus(400); //unable to insert superlike, bad request
     }
 
 });

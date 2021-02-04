@@ -8,14 +8,19 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
 exports.authenticateToken = (req, res, next) => {
+    
     // Gather the jwt access token from the request header
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(400) // return bad request if there isn't any token
+
+    if (token == null) {
+        return res.sendStatus(401) // unauthorized
+    }
   
     jwt.verify(token, process.env.TOKEN_SECRET, (err, hashed_details) => {
-      console.log(err)
-      if (err) return res.sendStatus(400)
+      if (err) {
+        return res.sendStatus(401) // unauthorized
+      }
       req.hashed_details = hashed_details
       next() // pass the execution off to whatever request the client intended
     })

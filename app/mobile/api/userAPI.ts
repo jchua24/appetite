@@ -13,11 +13,9 @@ export const apiGetUserDetails = async () => {
 
     const res = await client.get(env.apiUrl + 'user/' + userId, {headers: {"Authorization" : `Bearer ${authToken}`}});
 
-    console.log("user details response: " + res.data)
-
-    if (!res || res.status != 200 || typeof(res.data) == "string") {
+    if (!res || res.status != 200) {
       throw 'Unable to retrieve user details.';
-    }
+    } 
 
     console.log("user details: " + res.data.name)
 
@@ -37,11 +35,9 @@ export const apiGetSuperLikes = async () => {
   
       const res = await client.get(env.apiUrl + 'user/superlike/' + userId, {headers: {"Authorization" : `Bearer ${authToken}`}});
 
-      if (!res || res.status != 200 || typeof(res.data) == "string") {
+      if (!res || res.status != 200) {
         throw 'Unable to retrieve superlikes.';
       }
-
-      return res.data;
 
     } catch (err) {
       throw err;
@@ -51,18 +47,20 @@ export const apiGetSuperLikes = async () => {
 export const apiSuperLikeRestaurant = async (restaurantId) => {
 
     try {
+  
       const authToken = await AsyncStorage.getItem("authToken");
       const userId = await AsyncStorage.getItem("userId");
 
-      const res = await client.post(env.apiUrl + 'user/add/superlike/' + userId, {restaurantId: restaurantId}, {headers: {"Authorization" : `Bearer ${authToken}`}});
+      const res = await client.post(env.apiUrl + 'user/superlike/' + userId, {restaurantId: restaurantId}, {headers: {"Authorization" : `Bearer ${authToken}`}});
 
       if (!res || res.status != 200) {
-        throw 'Unable to record superlike for user ' + userId + ' on restaurant ID ' + restaurantId + '.';
-      }
-
-      return res.data;
+        throw `Unable to record superlike of restaurant ${restaurantId} for user ${userId}.`;
+      } 
+        
+      console.log(`Successfully recorded superlike of restaurant ${restaurantId} for user ${userId}.`);
+  
     } catch (err) {
-      throw err;
+      throw err; 
     }
 }
 
