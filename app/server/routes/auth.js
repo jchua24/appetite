@@ -2,7 +2,6 @@
 Handles endpoints for user authentication and sign-up
 */ 
 
-
 const express = require('express');
 const router = express.Router() 
 

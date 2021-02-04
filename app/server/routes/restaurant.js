@@ -27,12 +27,47 @@ router.get("/", authenticateToken, async (req, res) => {
 
 
 //logging a swipe on a particular restaurant
-router.post("/swipe", authenticateToken, async (req, res) => {
-    res.send("logging swipe on specific restaurant"); 
+router.put("/swipe/:restaurantId", authenticateToken, async (req, res) => {
+
+    const restaurantId = req.params.restaurantID; 
+
+    if (!req.body.hasOwnProperty('userId') || !req.body.hasOwnProperty('weight') || restaurantId == null) {
+        return res.sendStatus(400); //bad request 
+    }
+
+    const restaurant = await Restaurant.findOne({ _id: req.params.id }).exec();
+    const user = await User.findOne({ _id: req.params.id }).exec();
+
+    if(restaurant == null || user == null) {
+        return res.sendStatus(404); //user and/or restaurant not found 
+    }
+
+    //update overall weighting of restaurant 
+    const updateRestaurant = await Restaurant.updateOne({_id: restaurantId},  { $push: { weight: restaurant.weight + req.body.weight}});
+        
+    if(updateRestaurant == null ) {
+        return res.sendStatus(400); //unable to update restaurant weighting, bad request
+    }
+
+    //get the categories of the restaurant and update their values in the user's preferences based on the value of the swipe 
+    const commonCategories = restaurant.categories.filter(value => Object.keys(user.categories).includes(value));
+
+    for(const category in commonCategories) {
+        user.categories[category] += weight;         
+    }
+
+    const updatedUser = await newUser.save();
+    
+    if(updatedUser == null) {
+        return res.sendStatus(400); 
+    } else {
+        return res.sendStatus(200); //update successful
+    }
+
 });
 
 //get details for specific restaurant
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
     
     try {
 
