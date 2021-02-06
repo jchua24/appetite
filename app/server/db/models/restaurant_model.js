@@ -60,6 +60,10 @@ const restaurantSchema = mongoose.Schema({
     hours: {
         type: Object,
         required: false
+    }, 
+    phonenumber: {
+        type: String, 
+        required: false
     }
 });
 

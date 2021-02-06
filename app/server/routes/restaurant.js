@@ -43,23 +43,24 @@ router.put("/swipe/:restaurantID", authenticateToken, async (req, res) => {
         return res.sendStatus(404); //user and/or restaurant not found 
     }
 
-    
-    console.log("new weight: " + restaurant.weight + req.body.weight)
-
     try {
         //update overall weighting of restaurant 
-        await Restaurant.updateOne({_id: restaurantID},  { $set: { weight: restaurant.weight + req.body.weight}});
+        await Restaurant.updateOne({_id: restaurantID},  { $set: { weight: parseInt(restaurant.weight) + parseInt(req.body.weight)}});
     } catch (err)  {
         console.log(err);
         return res.sendStatus(500); //db error 
     } 
 
-    //get the categories of the restaurant and update their values in the user's preferences based on the value of the swipe 
+    //get the categories of the restaurant and update their values in the user's categories weighting based on the value of the swipe 
     const commonCategories = restaurant.categories.filter(value => Object.keys(user.categories).includes(value));
 
-    for(const category in commonCategories) {
-        user.categories[category] += req.body.weight;         
-    }
+    commonCategories.forEach(function(category) {
+        user.categories[category] += req.body.weight;       
+    })
+
+    user.markModified('categories');
+
+    console.log("new user categories: " + JSON.stringify(user.categories)); 
 
     try {
         await user.save();
@@ -119,6 +120,11 @@ router.get("/:id", authenticateToken, async (req, res) => {
             });
         }
 
+        if ("display_phone" in details) {
+            restaurant["phonenumber"] = details["display_phone"];
+        }
+
+        //make request to get yelp user reviews 
         const reviews = await getYelpReviews(restaurant.yelpid); 
 
         //extract contents of most recent review 
