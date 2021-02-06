@@ -37,6 +37,8 @@ router.get("/superlike/:id", authenticateToken, async (req, res) => {
     //search restaurant collection with IDs
     const restaurants = await Restaurant.find().where('_id').in(user.superLikes).exec();
 
+    console.log("restaurants found: " + JSON.stringify(restaurants));
+
     if (restaurants != null) {
         return res.send(restaurants); 
     } else {

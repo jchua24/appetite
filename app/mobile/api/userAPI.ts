@@ -39,6 +39,8 @@ export const apiGetSuperLikes = async () => {
         throw 'Unable to retrieve superlikes.';
       }
 
+      return res.data; 
+
     } catch (err) {
       throw err;
     }
