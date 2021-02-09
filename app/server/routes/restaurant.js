@@ -11,18 +11,48 @@ const { User } = require("../db/models/user_model");
 const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
-const {authenticateToken} = require('../service/auth/auth_helpers');
+const {sampleRestaurants, applySigmoid, normalizeWeights, buildStacks, buildQuery} = require('../service/restaurant/recommendation');
+const {authenticateToken} = require('../service/auth/authentication');
 const {getYelpDetails, getYelpReviews} = require('../service/yelp/yelp') 
+
 
 //getting all restaurants
 router.post("/", authenticateToken, async (req, res) => {
 
-    const restaurants = await Restaurant.find().limit(10).exec();
+    //construct MongoDB query from user search params
+    const queryBody = buildQuery(req.body); 
 
-    if(restaurants != null) {
-        return res.send(restaurants); 
+    //apply query, select 100 random restaurants that meet the query criteria, then sort by descending weight
+    const pipeline = [
+        {"$match": queryBody}, 
+        {"$sample": {"size": 100}}, 
+        {"$sort": {"weight": -1}}
+    ]
+
+    //execute query - aggregate returns restaurant data
+    const restaurant_data = await Restaurant.aggregate(pipeline).exec();   
+
+    //get user 
+    const user = await User.findOne({ _id: req.body["userid"] }).exec();
+
+    if(restaurant_data != null && user != null) {
+        //cast restaurant data to Restaurant model instances
+        let restaurants = restaurant_data.map(data => new Restaurant(data));
+        
+        // ------ recommendation algorithm (with helpers) ------- 
+
+        let categoryProbabilities = applySigmoid(user.categories);
+
+        normalizeWeights(categoryProbabilities);  
+
+        let stacks = buildStacks(Object.keys(user.categories), restaurants, categoryProbabilities); 
+
+        let sampledRestaurants = sampleRestaurants(categoryProbabilities, stacks); 
+
+        //return restaurants
+        return res.send(sampledRestaurants); 
     } else {
-        return res.status(500); // server error
+        return res.status(404); //no restaurants found, or user not found
     }
 });
 

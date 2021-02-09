@@ -12,7 +12,7 @@ const { User } = require("../db/models/user_model");
 const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
-const {hashPassword, verifyPassword, generateAccessToken} = require("../service/auth/auth_helpers"); 
+const {hashPassword, verifyPassword, generateAccessToken} = require("../service/auth/authentication"); 
 const {categories} = require('../misc/categories');
 
 

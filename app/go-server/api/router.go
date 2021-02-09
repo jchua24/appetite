@@ -28,20 +28,7 @@ func RouterInit() {
 	// Restaurant methods
 	restaurantString := "/restaurant"
 	r.HandleFunc(restaurantString, data.GetRestaurants).Methods("POST")
-	r.HandleFunc(restaurantString+"/{id:[a-zA-Z0-9]*}", data.GetRestaurant).Methods("GET")
-	r.HandleFunc(restaurantString+"/add", data.AddRestaurant).Methods("POST")
-	r.HandleFunc(restaurantString+"/delete/{id:[a-zA-Z0-9]*}", data.DeleteRestaurant).Methods("DELETE")
-	r.HandleFunc(restaurantString+"/update/{id:[a-zA-Z0-9]*}", data.UpdateRestaurant).Methods("PUT")
-	r.HandleFunc(restaurantString+"/swipe/{id:[a-zA-Z0-9]*}", data.Swipe).Methods("PUT")
 
-	// User methods
-	userString := "/user"
-	r.HandleFunc(userString+"/{id:[a-zA-Z0-9]*}", data.GetUser).Methods("GET")
-	r.HandleFunc(userString+"/add", data.AddUser).Methods("POST")
-	r.HandleFunc(userString+"/auth", data.AuthenticateUser).Methods("POST")
-	r.HandleFunc(userString+"/superlike/{id:[a-zA-Z0-9]*}", data.GetSuperLikes).Methods("GET")
-	r.HandleFunc(userString+"/add/superlike/{id:[a-zA-Z0-9]*}", data.AddSuperLike).Methods("POST")
-	r.HandleFunc(userString+"/delete/superlike/{id:[a-zA-Z0-9]*}", data.DeleteSuperLike).Methods("DELETE")
 	// Scrape method
 	r.HandleFunc("/scrape", data.ScrapeRestaurants).Methods("POST")
 

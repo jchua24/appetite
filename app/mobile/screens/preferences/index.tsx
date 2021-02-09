@@ -57,7 +57,7 @@ const Preferences = ({route, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
 
-        <PageHeader title="User Preferences" navigationFunction={() => navigation.navigate('Home', {login: false})} /> 
+        <PageHeader title="Narrow Your Search" navigationFunction={() => navigation.navigate('Home', {login: false})} /> 
 
         <View style={styles.cuisineSections}> 
         {cuisineSections}

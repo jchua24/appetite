@@ -9,7 +9,7 @@ const { Restaurant } = require("../db/models/restaurant_model");
 const { mongoose } = require("../db/mongoose");
 mongoose.set('useFindAndModify', false); // for some deprecation issues
 
-const {authenticateToken} = require('../service/auth/auth_helpers');
+const {authenticateToken} = require('../service/auth/authentication');
 
 // get individual user data 
 router.get("/:id", authenticateToken, async (req, res) => {
@@ -36,9 +36,7 @@ router.get("/superlike/:id", authenticateToken, async (req, res) => {
     
     //search restaurant collection with IDs
     const restaurants = await Restaurant.find().where('_id').in(user.superLikes).exec();
-
-    console.log("restaurants found: " + JSON.stringify(restaurants));
-
+    
     if (restaurants != null) {
         return res.send(restaurants); 
     } else {
