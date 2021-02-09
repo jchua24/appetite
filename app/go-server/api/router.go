@@ -25,11 +25,8 @@ func RouterInit() {
 	r.HandleFunc("/", Handler).Methods("GET")
 
 	data := DB{db: db, ctx: ctx}
-	// Restaurant methods
-	restaurantString := "/restaurant"
-	r.HandleFunc(restaurantString, data.GetRestaurants).Methods("POST")
 
-	// Scrape method
+	// Scrape method - to populate database
 	r.HandleFunc("/scrape", data.ScrapeRestaurants).Methods("POST")
 
 	address := "0.0.0.0:" + config.Port

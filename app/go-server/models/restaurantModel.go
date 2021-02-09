@@ -19,32 +19,3 @@ type Restaurant struct {
 	TopReview   Review             `json:"topreview,omitempty" bson:"topreview,omitempty"`     // populated in GET /restaurant/details query
 	PhoneNumber string             `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"` // populated in GET /restaurant/details query
 }
-
-type Review struct {
-	UserName    string `json:"username" bson:"username"`
-	UserImage   string `json:"userimage" bson:"userimage"`
-	ReviewText  string `json:"reviewtext" bson:"reviewtext"`
-	Rating      int    `json:"rating" bson:"rating"`
-	TimeCreated string `json:"timecreated" bson:"timecreated"`
-}
-
-type Swipe struct {
-	Weight int                `json:"weight" bson:"weight"`
-	UserId primitive.ObjectID `json:"userid,omitempty" bson:"userid,omitempty"`
-}
-
-type Filter struct {
-	Categories []string           `json:"categories,omitempty" bson:"categories,omitempty"`
-	Lat        float64            `json:"lat" bson:"lat"`
-	Lng        float64            `json:"lng" bson:"lng"`
-	Price      int                `json:"price,omitempty" bson:"price,omitempty"`
-	Radius     float64            `json:"radius,omitempty" bson:"radius,omitempty"` // kilometers
-	UserId     primitive.ObjectID `json:"userid" bson:"userid"`
-}
-
-type Radius struct {
-	LowLat float64
-	HiLat  float64
-	LowLng float64
-	HiLng  float64
-}
