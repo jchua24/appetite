@@ -95,4 +95,5 @@ Since this project was not built for a partner, we wanted the project to be open
 ## Contributers
 
 Rishab Luthra, Joshua Chua, Kevin Xu, Poplar Wang, Shayan Khalili-Moghaddam, Amy Gao
+
 Note: the app was originally a group project, and since then the backend was re-written by Joshua Chua 
